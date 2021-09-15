@@ -4,7 +4,7 @@
 
 #include "Point.h"
 #include "Validator.h"
-#include "BasicSpatial.hpp"
+#include "BasicGridSpatial.hpp"
 
 using namespace utec::spatial;
 
@@ -17,11 +17,11 @@ TEST(SimpleTest, basicTest) {
   using data_t = int;
   using point_t = Point<data_t, 2>;
 
-  Validator<point_t> validator;
-  BasicSpatial<point_t> instancia;
+  const std::size_t num_points = 100000;
+  const std::size_t min = 0, max = 50000;
 
-  const std::size_t num_points = 10000;
-  const std::size_t min = 0, max = 1000;
+  Validator<point_t> validator;
+  BasicGridSpatial<point_t> instancia(max, 10);
 
   auto cmp = [](point_t a, point_t b) {
     const int x = 0, y = 1;
@@ -40,10 +40,14 @@ TEST(SimpleTest, basicTest) {
     instancia.insert(p);
   }
 
-  auto reference_result = validator.nearest_neighbor(point_t({50, 50}));
-  auto result = instancia.nearest_neighbor(point_t({50, 50}));
-  
-  EXPECT_EQ(reference_result, result);
+  for (std::size_t J = 0; J < 10; J++) {
+    point_t reference_point({genRandomNumber<int>(min, max), genRandomNumber<int>(min, max)});
+
+    auto reference_result = validator.nearest_neighbor(reference_point);
+    auto result = instancia.nearest_neighbor(reference_point);
+
+    EXPECT_EQ(reference_point.distance(reference_result), reference_point.distance(result));
+  }
 }
 
 int main(int argc, char** argv) {
