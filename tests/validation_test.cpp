@@ -18,10 +18,10 @@ TEST(SimpleTest, basicTest) {
   using point_t = Point<data_t, 2>;
 
   const std::size_t num_points = 100000;
-  const std::size_t min = 0, max = 50000;
+  const std::size_t min = 0, max = 50000-1;
 
   Validator<point_t> validator;
-  BasicGridSpatial<point_t> instancia(max, 10);
+  BasicGridSpatial<point_t> instancia(max+1, 10);
 
   auto cmp = [](point_t a, point_t b) {
     const int x = 0, y = 1;
