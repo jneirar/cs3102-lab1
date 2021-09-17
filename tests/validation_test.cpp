@@ -14,11 +14,11 @@ TEST(SimpleTest, basicTest) {
   using data_t = int;
   using point_t = Point<data_t, 2>;
 
-  const std::size_t num_points = 100000;
-  const std::size_t min = 0, max = 50000-1;
+  const std::size_t num_points = 10000;
+  const std::size_t min = 0, max = 5000-1;
 
   Validator<point_t> validator;
-  BasicGridSpatial<point_t> instancia(max+1, 10);
+  BasicGridSpatial<point_t> instancia(max+1, 5);
 
   DataGenerator generator(num_points, min, max);
   auto points = generator.get_data();
