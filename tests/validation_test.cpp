@@ -49,6 +49,7 @@ TYPED_TEST_P(RangeTest, BasicTest) {
 
   std::sort(result.begin(), result.end());
   std::sort(reference_result.begin(), reference_result.end());
+
   EXPECT_EQ(reference_result, result);
 }
 
