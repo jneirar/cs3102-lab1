@@ -285,7 +285,7 @@ void AVLTree<T>::insert(T data){
         prev = curr;
         if (data < curr->data)
             curr = curr->left;
-        else if (data > curr->data)
+        else if (!(data < curr->data || data == curr->data))
             curr = curr->right;
         else
             return;
@@ -314,7 +314,7 @@ Node<T>* AVLTree<T>::search(const T& data) const {
 template <class T>
 void AVLTree<T>::rangeSearch(T start, T end, std::vector<T> &result, Node<T>* node){
   if(node == nullptr) return;
-  if(start <= node->data && node->data <= end){
+  if((start < node->data || start == node->data) && (node->data < end || node->data == end)){
     if(start == node->data)
       rangeSearch(start, end, result, node->right);
     else if(node->data == end)

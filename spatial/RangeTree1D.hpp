@@ -70,8 +70,8 @@ private:
 
     RTree_Node<T>* findSplitNode(T min, T max){
         RTree_Node<T>* v = root;
-        while(!v->leaf && (max <= v->data || min > v->data)){
-            if(max <= v->data)
+        while(!v->leaf && (max < v->data || max == v->data || (!(min < v->data || min == v->data)))){
+            if(max < v->data || max == v->data)
                 v = v->left;
             else
                 v = v->right;
@@ -80,7 +80,7 @@ private:
     }
     void reportSubTree(T min, T max, std::vector<T> &result, RTree_Node<T>* node){
         if(node->leaf){
-            if(min <= node->data && node->data <= max)
+            if((min < node->data || min == node->data) && (node->data < max || node->data == max))
                 result.push_back(node->data);
         }else{
             reportSubTree(min, max, result, node->left);
@@ -410,14 +410,14 @@ void RTree<T>::insert(T data){
     RTree_Node<T>* prev = curr;
     while (curr != nullptr){
         prev = curr;
-        if (data <= curr->data)
+        if (data < curr->data || data == curr->data)
             curr = curr->left;
         else 
             curr = curr->right;
     }
     size++;
     RTree_Node<T>* newRTree_Node = new RTree_Node<T>(data, prev);
-    if (data <= prev->data){
+    if (data < prev->data || data == prev->data){
         prev->leaf = false;
         prev->left = newRTree_Node;
         RTree_Node<T>* newRTree_Node2 = new RTree_Node<T>(data, newRTree_Node);
@@ -466,28 +466,28 @@ void RTree<T>::rangeSearch(T start, T end, std::vector<T> &result, RTree_Node<T>
   RTree_Node<T>* vsplit = findSplitNode(start, end);
   
   if(vsplit->leaf){
-    if(start <= vsplit->data && vsplit->data <= end)    result.push_back(vsplit->data);
+    if((start < vsplit->data || start == vsplit->data) && (vsplit->data < end || vsplit->data == end))    result.push_back(vsplit->data);
   }else{
     RTree_Node<T>* vleft = vsplit->left;
     while(!vleft->leaf){
-        if(start <= vleft->data){
+        if(start < vleft->data || start == vleft->data){
             reportSubTree(start, end, result, vleft->right);
             vleft = vleft->left;
         }else
             vleft = vleft->right;
         if(vleft->leaf){
-            if(start <= vleft->data && vleft->data <= end)  result.push_back(vleft->data);
+            if((start < vleft->data || start == vleft->data) && (vleft->data < end || vleft->data == end))  result.push_back(vleft->data);
         }
     }
     RTree_Node<T>* vright = vsplit->right;
     while(!vright->leaf){
-        if(vright->data <= end){
+        if(vright->data < end || vright->data == end){
             reportSubTree(start, end, result, vright->left);
             vright = vright->right;
         }else
             vright = vright->left;
         if(vright->leaf){
-            if(start <= vright->data && vright->data <= end)  result.push_back(vright->data);
+            if((start < vright->data || start == vright->data) && (vright->data < end || vright->data == end))  result.push_back(vright->data);
         }
     }
 
